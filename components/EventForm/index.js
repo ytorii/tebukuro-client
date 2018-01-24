@@ -1,7 +1,10 @@
 // @flow
 import React, { Component } from 'react'
 
-type Props = { onSubmit: Function }
+type Props = {
+  onSubmit: Function,
+  onSignIn: Function,
+}
 type State = {
   name: string,
   description: string,
@@ -24,6 +27,11 @@ export default class EventForm extends Component<Props, State> {
   onSubmitHandler = (e: SyntheticEvent<>) => {
     e.preventDefault()
     this.props.onSubmit(this.state)
+  }
+
+  onSignInHandler = (e: SyntheticEvent<>) => {
+    e.preventDefault()
+    this.props.onSignIn({ provider: 'github' })
   }
 
   // TODO: Extract component and fields as common components
@@ -54,6 +62,9 @@ export default class EventForm extends Component<Props, State> {
             <input type="submit" />
           </div>
         </form>
+        <button onClick={this.onSignInHandler} >
+          Sign in with Github
+        </button>
       </div>
     )
   }

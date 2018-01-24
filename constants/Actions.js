@@ -1,4 +1,7 @@
 export default {
+  User: {
+    signIn: 'SIGN_IN',
+  },
   Event: {
     createEvent: 'CREATE_EVENT',
     fetchEvent: 'FETCH_EVENT',

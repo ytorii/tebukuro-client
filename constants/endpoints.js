@@ -10,3 +10,7 @@ export const participant = {
   create: '/events/:eventId/participants',
   delete: '/events/:eventId/participants/:id',
 }
+
+export const user = {
+  omniauth: '/auth/:provider',
+}
