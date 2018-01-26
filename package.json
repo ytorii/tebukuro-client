@@ -25,6 +25,7 @@
     "next-redux-wrapper": "^1.3.5",
     "normalizr": "^3.2.4",
     "path-to-regexp": "^2.1.0",
+    "query-string": "^5.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
