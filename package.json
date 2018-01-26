@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "devise-token-client": "^0.1.3",
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
     "next": "^4.2.1",
