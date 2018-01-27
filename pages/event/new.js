@@ -3,13 +3,13 @@ import React from 'react'
 import withRedux from 'next-redux-wrapper'
 import createStore from '../../store'
 import { createEvent } from '../../actions/event'
-import { omniauthSignIn } from '../../actions/user'
+import { userSignIn } from '../../actions/user'
 import { getEventErrorsArray } from '../../selectors/event'
 import EventFormComponent from '../../components/EventForm'
 
 type EventFormProps = {
   createEvent: Function,
-  omniauthSignIn: Function,
+  userSignIn: Function,
   errors: ?string[]
 }
 
@@ -22,11 +22,11 @@ export const NewEvent = (props: EventFormProps) => (
           <li>{ error }</li>)}
       </ul>
     }
-    <EventFormComponent onSubmit={props.createEvent} onSignIn={props.omniauthSignIn} />
+    <EventFormComponent onSubmit={props.createEvent} onSignIn={props.userSignIn} />
   </div>
 )
 
-const mapDispatchToProps = { createEvent, omniauthSignIn }
+const mapDispatchToProps = { createEvent, userSignIn }
 const mapStateToProps = state => (
   { errors: getEventErrorsArray(state) }
 )
