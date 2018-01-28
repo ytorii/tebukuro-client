@@ -1,6 +1,5 @@
 // @flow
 import { createAction } from 'redux-actions'
-import type { Dispatch } from 'redux'
 import queryString from 'query-string'
 import axios from 'axios'
 import * as Auth from 'devise-token-client'
@@ -12,7 +11,7 @@ const validateTokenUrl = `${baseAuthUrl}/validate_token`
 const fetchAutheticatedUser = config => axios.get(validateTokenUrl, config)
 
 const openAuthPopup = (provider) => {
-  const authOriginUrl = encodeURIComponent(`http://${window.location.host}/blank`)
+  const authOriginUrl = encodeURIComponent(`http://${window.location.host}/_blank`)
   const authQuery = `auth_origin_url=${authOriginUrl}`
   const omniauthUrl = `${baseAuthUrl}/${provider}?${authQuery}`
 
@@ -54,11 +53,10 @@ const omniauthSignIn = (params: Object) => {
     return fetchAutheticatedUser({ headers: Auth.requestHeaders() })
       .then(res => res.data.data, err => Promise.reject(err))
   }
+  // const popup = openAuthPopup(params.provider)
   const popup = openAuthPopup(params.provider)
 
   return new Promise((resolve, reject) => checkDidUserAuthenticated(popup, resolve, reject))
 }
 
-const userSignIn = createAction(ActionsType.User.signIn, omniauthSignIn)
-
-export default userSignIn
+export const userSignIn = createAction(ActionsType.User.signIn, omniauthSignIn)
