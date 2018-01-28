@@ -30,35 +30,35 @@ const requestHeadersFromQuery = (query) => {
   }
 }
 
-export const omniauthSignIn = (params: Object) => {
+const checkDidUserAuthenticated = (popup, resolve, reject) => {
+  const authHeaders = requestHeadersFromQuery(popup.location.search)
+
+  if (authHeaders.uid) {
+    popup.close()
+    return fetchAutheticatedUser({ headers: authHeaders })
+      .then((res) => {
+        Auth.persistToken(new Headers(res.headers))
+        if (res.data.success) {
+          return resolve(res.data.data)
+        }
+        return reject(new Error('Error has occured in fetching User'))
+      })
+  } else if (popup.closed) {
+    return reject(new Error('Error has occured in User Authentication with the provider'))
+  }
+  return setTimeout(() => checkDidUserAuthenticated(popup, resolve, reject), 0)
+}
+
+const omniauthSignIn = (params: Object) => {
   if (Auth.isSignedIn()) {
     return fetchAutheticatedUser({ headers: Auth.requestHeaders() })
       .then(res => res.data.data, err => Promise.reject(err))
   }
   const popup = openAuthPopup(params.provider)
-  const checkDidUserAuthenticated = setInterval(() => {
-    const authHeaders = requestHeadersFromQuery(popup.location.search)
 
-    if (authHeaders.uid) {
-      popup.close()
-      clearInterval(checkDidUserAuthenticated)
-      return fetchAutheticatedUser({ headers: authHeaders })
-        .then((res) => {
-          Auth.persistToken(new Headers(res.headers))
-          if (res.data.success) {
-            // Dispatch SignInSuccess action or return Resolve
-            return res.data.data
-          }
-          console.log('Error had occured in token verification')
-          // Dispatch SignInFailure action or return Reject
-          return Promise.reject(new Error('Error has occured in fetching User'))
-        })
-    } else if (popup.closed) {
-      clearInterval(checkDidUserAuthenticated)
-      // Dispatch SignInFailure action or return Reject
-      return Promise.reject(new Error('Error has occured in User Authentication with the provider'))
-    }
-  }, 500)
+  return new Promise((resolve, reject) => checkDidUserAuthenticated(popup, resolve, reject))
 }
 
-export const userSignIn = createAction(ActionsType.User.signIn, omniauthSignIn)
+const userSignIn = createAction(ActionsType.User.signIn, omniauthSignIn)
+
+export default userSignIn
